@@ -9,6 +9,7 @@ from pathlib import Path
 from typing import Any
 
 from .io import load_inputs, parse_time
+from .recovery import plan_recovery
 from .metrics import observability_contract
 from .redaction import prompt_hash
 from .timeutil import is_visible, nearest_rank, psi, token_bin
@@ -165,6 +166,7 @@ def run(input_dir: str | Path, output_dir: str | Path) -> None:
     _write_csv(output / "drift_findings.csv", drift_rows, ["window_id", "slice_id", "weighted_quality_delta", "psi", "effective_count", "gate"])
     _write_csv(output / "tenant_slo.csv", tenant_rows, ["window_id", "tenant_tier", "requests", "p95_ttft_ms", "error_rate", "slo_pass"])
     _write_csv(output / "routing_plan.csv", routes, ["window_id", "status", "stable_percent", "candidate_percent", "reason_codes", "candidate_capacity_tokens_s", "stable_capacity_tokens_s"])
+    plan_recovery(root, data, output, _write_csv)
     validation = {"synthetic": True, "files": {name: len(data["requests"]) if name == "request_events.ndjson" else len(data["batches"]) if name == "batch_events.ndjson" else len(data["replicas"]) if name == "replica_inventory.csv" else len(data["snapshots"]) if name == "runtime_snapshots.csv" else len(data["quality"]) if name == "quality_evaluations.csv" else len(data["tenants"]) if name == "tenant_slo.csv" else len(data["incidents"]) if name == "incident_events.ndjson" else len(data["annotations"]) if name == "operator_annotations.ndjson" else 1 for name in data["input_files"]}, "window_count": len(windows), "duplicate_request_ids": len(requests) - len({row["request_id"] for row in requests}), "duplicate_batch_ids": len(batches) - len(set(batches))}
     (output / "input_validation.json").write_text(json.dumps(validation, ensure_ascii=False, sort_keys=True, indent=2) + "\n", encoding="utf-8")
     (output / "observability_contract.json").write_text(json.dumps(observability_contract(policy), ensure_ascii=False, sort_keys=True, indent=2) + "\n", encoding="utf-8")
