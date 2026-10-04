@@ -1,0 +1,13 @@
+{
+  "workers": 2,
+  "admin_token": "fabric-local-admin",
+  "tenants": {
+    "north": {"token": "north-local"},
+    "south": {"token": "south-local"}
+  },
+  "deployments": [
+    {"alias": "ranker", "revision": "stable-1", "factor": 2,
+     "operation_id": "bootstrap.ranker", "expected_epoch": 0,
+     "max_batch_size": 4, "max_batch_time": 0.02}
+  ]
+}

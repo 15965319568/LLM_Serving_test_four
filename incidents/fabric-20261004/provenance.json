@@ -1,0 +1,7 @@
+{
+  "capture": "actual CPU replay",
+  "verified_reference": false,
+  "inputs": "capture_v6_incident.py: three clients, two replicas, partial update, exact operation replay",
+  "worker_order": "source file and source_line",
+  "collector_order": "delivery only; repeats permitted"
+}

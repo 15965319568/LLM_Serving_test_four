@@ -1,9 +1,13 @@
-# FleetServe / MLServer operations workbench
+# FleetServe / MLServer inference operations workbench — v6
 
 这是基于 SeldonIO/MLServer 固定源码的 CPU serving 工程。自有控制层管理双区域租约、
 灰度路由、原始遥测、质量回填、发布判定和崩溃恢复；请求经过实际 MLServer registry、
 data plane 和运行实例。TokenRuntime是确定性的CPU测试载荷，不模拟神经网络质量。
 StreamServe提供持久化SSE、停止词、重试与资源预算。任务见 TASK.md。
+
+v6增加了试点使用的双副本数值服务。批处理会实际进入MLServer进程池；MatrixRuntime
+处理多行、多输入头的CPU载荷。此入口与历史流式/灰度入口共享上游核心及协议组件。
+它们有不同的消费者和状态目录，不能因为只运行一个入口就删除另一个入口。
 
 ## 环境与入口
 
@@ -19,6 +23,24 @@ export PYTHONDONTWRITEBYTECODE=1
 python -m unittest discover -s tests -v
 python -m fleetserve --state state/demo serve --backend mlserver --demo-workers --port 8081
 ```
+
+数值试点入口（先设置上面的PYTHONPATH；使用另一个终端或停止旧服务）：
+
+```bash
+python -m fleetserve.inference --config config/fabric.json --state state/fabric --port 8082
+```
+
+通过真实HTTP请求数值推理与管理状态：
+
+```bash
+curl -sS http://127.0.0.1:8082/v2/models/ranker/infer \
+  -H 'Authorization: Bearer north-local' -H 'Content-Type: application/json' \
+  -d '{"id":"demo","inputs":[{"name":"x","datatype":"FP64","shape":[2,1],"data":[1,3]}]}'
+curl -sS http://127.0.0.1:8082/admin/fabric -H 'Authorization: Bearer fabric-local-admin'
+```
+
+演练定义与诊断API见docs/fabric-contract.md，原始观测见incidents/fabric-20261004。
+公开基础测试只保证入口可运行，不覆盖整个事故契约。独立演练使用新的state目录。
 
 另一个终端发起真实流式请求（公开demo凭证）：
 
@@ -53,6 +75,7 @@ HTTP管理接口和Python API见契约；python -m fleetserve --help 显示其�
 | --- | --- |
 | services/mlserver | 固定上游的源码快照、测试、协议、文档和许可证 |
 | src/fleetserve | 多区域控制端、gateway、backend适配、遥测、HTTP与运维 |
+| src/fleetserve/inference | 数值服务、持久化接纳记录、双副本在线部署与真实CPU载荷 |
 | src/streamserve | 原有持久化请求协调、SSE、KV与子进程兼容运行时 |
 | config/fleet | 显式profile和分层配置；archives为旧离线预览配置 |
 | models | 有SHA校验的CPU演练artifact，非大模型权重 |

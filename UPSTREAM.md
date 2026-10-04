@@ -18,3 +18,9 @@ FleetServe, StreamServe, configuration and the incident exercise were authored f
 this task. The initial FleetServe implementation includes pilot-era semantics;
 compatibility adapters and archived profiles retain their documented consumers.
 The incident files are synthetic replay material, not a claim of a real outage.
+
+The v6 numerical pilot extends adaptive batching with lifecycle/diagnostic methods
+and adds fleetserve.inference. Its deployment contract intentionally exceeds the
+original upstream batching assumptions. The fabric incident is captured from an
+actual run of this synthetic pilot, with original per-process events retained.
+Upstream copyrights and tests remain intact; root docs define the deployment scope.

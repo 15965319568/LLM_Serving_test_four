@@ -1,0 +1,8 @@
+{"kind": "loading", "pid": 124913, "version": "v17"}
+{"kind": "loaded", "pid": 124913, "version": "v17"}
+{"invocation": "c19372762a81411581d6c2afee29a55a", "kind": "started", "pid": 124913, "rows": 4, "version": "v17"}
+{"invocation": "c19372762a81411581d6c2afee29a55a", "kind": "finished", "pid": 124913, "rows": 4, "version": "v17"}
+{"kind": "loading", "pid": 124913, "version": "v18"}
+{"kind": "load_failed", "pid": 124913, "version": "v18"}
+{"active": 0, "kind": "unloaded", "pid": 124913, "version": "v18"}
+{"active": 0, "kind": "unloaded", "pid": 124913, "version": "v17"}
