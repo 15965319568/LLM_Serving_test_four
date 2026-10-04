@@ -1,0 +1,49 @@
+{
+  "files": [
+    {
+      "partition": "edge",
+      "path": "gateway-final.jsonl",
+      "format": "jsonl"
+    },
+    {
+      "partition": "archive",
+      "path": "capture-0-archive.csv",
+      "format": "csv"
+    },
+    {
+      "partition": "measurements",
+      "path": "capture-0-measurements.jsonl.gz",
+      "format": "jsonl"
+    },
+    {
+      "partition": "secondary",
+      "path": "capture-0-secondary.csv",
+      "format": "csv"
+    },
+    {
+      "partition": "notes",
+      "path": "capture-0-notes.jsonl.gz",
+      "format": "jsonl"
+    },
+    {
+      "partition": "legacy",
+      "path": "capture-0-legacy.csv",
+      "format": "csv"
+    },
+    {
+      "partition": "q-slow",
+      "path": "capture-0-q-slow.jsonl.gz",
+      "format": "jsonl"
+    },
+    {
+      "partition": "q-fast",
+      "path": "capture-0-q-fast.csv",
+      "format": "csv"
+    },
+    {
+      "partition": "edge",
+      "path": "capture-0-edge.jsonl.gz",
+      "format": "jsonl"
+    }
+  ]
+}

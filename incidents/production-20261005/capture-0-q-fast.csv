@@ -1,0 +1,11 @@
+﻿schema,offset,kind,admission_id,body
+delivery/1,4,event,capture.candidate.north.2,"{""schema"": 2, ""event_id"": ""malformed.8"", ""update_seq"": 0, ""request_id"": ""client-reused"", ""finished_at"": 301, ""score"": 9}"
+delivery/1,1,event,capture.stable.south.1,"{""schema"": 2, ""event_id"": ""quality.stable.south.1"", ""update_seq"": 0, ""request_id"": ""client-reused"", ""finished_at"": 301, ""score"": 1}"
+delivery/1,6,watermark,,"{""cohort"": ""batch"", ""through"": 110}"
+delivery/1,3,event,capture.stable.north.1,"{""schema"": 2, ""event_id"": ""malformed.1"", ""update_seq"": 0, ""request_id"": ""client-reused"", ""finished_at"": 301, ""score"": 9}"
+delivery/1,2,event,capture.candidate.north.2,"{""schema"": 2, ""event_id"": ""quality.candidate.north.2"", ""update_seq"": 0, ""request_id"": ""client-reused"", ""finished_at"": 301, ""score"": 1}"
+delivery/1,5,watermark,,"{""cohort"": ""interactive"", ""through"": 110}"
+delivery/1,0,event,capture.stable.north.0,"{""schema"": 2, ""event_id"": ""quality.stable.north.0"", ""update_seq"": 0, ""request_id"": ""client-reused"", ""finished_at"": 301, ""score"": 1}"
+delivery/1,4,event,capture.candidate.north.2,"{""schema"": 2, ""event_id"": ""malformed.8"", ""update_seq"": 0, ""request_id"": ""client-reused"", ""finished_at"": 301, ""score"": 9}"
+delivery/1,3,event,capture.stable.north.1,"{""schema"": 2, ""event_id"": ""malformed.1"", ""update_seq"": 0, ""request_id"": ""client-reused"", ""finished_at"": 301, ""score"": 9}"
+delivery/1,0,event,capture.stable.north.0,"{""schema"": 2, ""event_id"": ""quality.stable.north.0"", ""update_seq"": 0, ""request_id"": ""client-reused"", ""finished_at"": 301, ""score"": 1}"

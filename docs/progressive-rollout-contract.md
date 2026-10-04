@@ -1,4 +1,4 @@
-> V7.2 本轮范围以 acceptance-v7.2.md 为准；本文件保留历史profile背景，内部表名/schema描述不构成本轮验收要求。
+> 本轮工作见TASK.md，评分边界见docs/acceptance-v7.4.md；本文的完整产品背景不自动增加本轮考点。
 
 # 逐阶段灰度发布契约（v5.1）
 

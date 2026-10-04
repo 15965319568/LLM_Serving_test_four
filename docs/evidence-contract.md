@@ -34,7 +34,9 @@ evidence_version；完全重复、较旧修订、非法输入和不前进水位�
 绑定依据是原始receipt，不是当前alias配置或遥测自报cohort。
 
 同 request_id/role 优先最高rank；同最高rank不同事实为冲突。相同事实任选确定性的
-producer/event_id次序，不能重复计数。合法窗口内的权威未决修订冲突使该cohort不完整。
+producer/event_id次序，不能重复计数。只有属于本次人群和业务范围、且处于同一request_id/role最高可用登记rank的未决冲突使该cohort不完整。
+低权威冲突、非live记录和revision声明不符的冲突不拥有阻断当前生产人群的权限。
+最高适用权威有未决冲突时，该角色不提供有效值，不能降级采用低权威值补足样本。
 每个有gateway终态的请求形成一条性能样本，可关联一条quality样本；缺quality不补零。
 输出保留样本来源身份及ignored原因，排序保持确定性，digest包含样本、排除和冲突信息。
 

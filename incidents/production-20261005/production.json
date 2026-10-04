@@ -1,0 +1,87 @@
+{
+  "policy": {
+    "min_samples": 3,
+    "max_error_rate": 0.5,
+    "max_latency_ratio": 1.2,
+    "max_quality_drop": 0.05,
+    "max_mix_distance": 1,
+    "required_cohorts": [
+      "interactive",
+      "batch"
+    ]
+  },
+  "telemetry": {
+    "producers": {
+      "edge": {
+        "format": "event-v2",
+        "role": "gateway",
+        "rank": 100
+      },
+      "exporter": {
+        "format": "export-v1",
+        "role": "gateway",
+        "rank": 50
+      },
+      "quality": {
+        "format": "event-v2",
+        "role": "quality",
+        "rank": 100
+      },
+      "worker": {
+        "format": "event-v2",
+        "role": "advisory",
+        "rank": 10
+      },
+      "dashboard": {
+        "format": "export-v1",
+        "role": "advisory",
+        "rank": 5
+      },
+      "quality-legacy": {
+        "format": "export-v1",
+        "role": "quality",
+        "rank": 100
+      },
+      "quality-secondary": {
+        "format": "event-v2",
+        "role": "quality",
+        "rank": 20
+      },
+      "measurements": {
+        "format": "event-v2",
+        "role": "gateway",
+        "rank": 200
+      },
+      "archive": {
+        "format": "event-v2",
+        "role": "quality",
+        "rank": 1000
+      }
+    },
+    "required_sources": [
+      "edge",
+      "quality",
+      "quality-legacy",
+      "measurements"
+    ],
+    "local_gateway_producer": "edge"
+  },
+  "tenants": {
+    "north": {
+      "token": "north-local",
+      "regions": [
+        "east"
+      ],
+      "cohort": "interactive",
+      "max_tokens": 4096
+    },
+    "south": {
+      "token": "south-local",
+      "regions": [
+        "west"
+      ],
+      "cohort": "batch",
+      "max_tokens": 4096
+    }
+  }
+}

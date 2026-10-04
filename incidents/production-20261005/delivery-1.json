@@ -1,0 +1,14 @@
+{
+  "files": [
+    {
+      "partition": "legacy",
+      "path": "capture-1-legacy.jsonl.gz",
+      "format": "jsonl"
+    },
+    {
+      "partition": "q-slow",
+      "path": "capture-1-q-slow.csv",
+      "format": "csv"
+    }
+  ]
+}

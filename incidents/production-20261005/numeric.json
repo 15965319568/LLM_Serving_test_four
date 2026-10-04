@@ -1,0 +1,17 @@
+{
+  "workers": 2,
+  "partitions": {
+    "edge": "edge",
+    "q-fast": "quality",
+    "q-slow": "quality",
+    "legacy": "quality-legacy",
+    "notes": "dashboard",
+    "secondary": "quality-secondary",
+    "measurements": "measurements",
+    "archive": "archive"
+  },
+  "revision_factors": {
+    "r20261003": 2,
+    "r20261004": 3
+  }
+}

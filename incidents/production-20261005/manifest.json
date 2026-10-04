@@ -1,0 +1,12 @@
+{
+  "schema": 1,
+  "profiles": {
+    "production": [
+      "config.json",
+      "production.json"
+    ],
+    "archive": [
+      "config.json"
+    ]
+  }
+}

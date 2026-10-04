@@ -1,0 +1,13 @@
+﻿request_id,tenant,alias,revision,cohort,admitted,kind,source
+capture.stable.north.0,north,chat,r20261003,interactive,105,live,gateway
+capture.stable.north.1,north,chat,r20261003,interactive,105,live,gateway
+capture.stable.north.2,north,chat,r20261003,interactive,105,live,gateway
+capture.stable.south.0,south,chat,r20261003,batch,105,live,gateway
+capture.stable.south.1,south,chat,r20261003,batch,105,live,gateway
+capture.stable.south.2,south,chat,r20261003,batch,105,live,gateway
+capture.candidate.north.0,north,chat,r20261004,interactive,105,live,gateway
+capture.candidate.north.1,north,chat,r20261004,interactive,105,live,gateway
+capture.candidate.north.2,north,chat,r20261004,interactive,105,live,gateway
+capture.candidate.south.0,south,chat,r20261004,batch,105,live,gateway
+capture.candidate.south.1,south,chat,r20261004,batch,105,live,gateway
+capture.candidate.south.2,south,chat,r20261004,batch,105,live,gateway

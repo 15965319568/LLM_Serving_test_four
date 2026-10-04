@@ -1,0 +1,14 @@
+{
+  "files": [
+    {
+      "partition": "secondary",
+      "path": "capture-2-secondary.csv",
+      "format": "csv"
+    },
+    {
+      "partition": "q-slow",
+      "path": "capture-2-q-slow.jsonl.gz",
+      "format": "jsonl"
+    }
+  ]
+}

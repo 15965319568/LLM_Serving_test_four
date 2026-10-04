@@ -1,0 +1,7 @@
+{
+  "revision": "r20261004",
+  "tokenizer": "utf8-v1",
+  "context_limit": 4096,
+  "sha256": "e9ed9affc90dadaab207d7a80c8c0d4ef46967066da4981ede636b97a857f480",
+  "content": "payload.json"
+}

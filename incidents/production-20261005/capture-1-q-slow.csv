@@ -1,0 +1,3 @@
+﻿schema,offset,kind,admission_id,body
+delivery/1,0,event,capture.stable.north.2,"{""schema"": 2, ""event_id"": ""quality.stable.north.2"", ""update_seq"": 0, ""request_id"": ""client-reused"", ""finished_at"": 301, ""score"": 1}"
+delivery/1,0,event,capture.stable.north.2,"{""schema"": 2, ""event_id"": ""quality.stable.north.2"", ""update_seq"": 0, ""request_id"": ""client-reused"", ""finished_at"": 301, ""score"": 1}"
