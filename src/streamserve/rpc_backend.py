@@ -22,14 +22,14 @@ class Worker:
         try:
             while line := await self.process.stdout.readline():
                 message = json.loads(line)
-                queue = self.pending.get(message.get('id'))
+                queue = self.pending.get((message.get('id'), message.get('attempt', 1)))
                 if queue is not None:
                     queue.put_nowait(message)
         except (ValueError, ConnectionError):
             pass
         finally:
-            for request_id, queue in list(self.pending.items()):
-                queue.put_nowait({'id': request_id, 'error': 'worker_lost'})
+            for (request_id, attempt), queue in list(self.pending.items()):
+                queue.put_nowait({'id': request_id, 'attempt': attempt, 'error': 'worker_lost'})
 
     async def close(self):
         if self.process.returncode is None:
@@ -71,7 +71,8 @@ class ProcessBackend:
         if worker is None or worker.process.returncode is not None:
             raise BackendFault('worker unavailable')
         queue = asyncio.Queue()
-        worker.pending[work.request_id] = queue
+        identity = (work.request_id, work.attempt)
+        worker.pending[identity] = queue
         try:
             await worker.send({'op': 'generate', 'work': asdict(work)})
             while True:
@@ -84,9 +85,9 @@ class ProcessBackend:
         except (BrokenPipeError, ConnectionError):
             raise BackendFault('worker disconnected') from None
         finally:
-            worker.pending.pop(work.request_id, None)
+            worker.pending.pop(identity, None)
             if worker.process.returncode is None:
                 try:
-                    await worker.send({'op': 'cancel', 'id': work.request_id})
+                    await worker.send({'op': 'cancel', 'id': work.request_id, 'attempt': work.attempt})
                 except (BrokenPipeError, ConnectionError):
                     pass

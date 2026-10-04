@@ -1,0 +1,13 @@
+{
+  "schema": 1,
+  "profiles": {
+    "production": [
+      "base.json",
+      "production.json"
+    ],
+    "staging": [
+      "base.json",
+      "staging.json"
+    ]
+  }
+}

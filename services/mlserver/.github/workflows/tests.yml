@@ -1,0 +1,211 @@
+name: Tests
+
+on:
+  push:
+    branches:
+      - master
+      - release/*
+  pull_request:
+    branches: [master]
+
+jobs:
+  generate:
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.9", "3.10", "3.11", "3.12"]
+        target: ["dataplane", "model-repository"]
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          virtualenvs-create: false
+      - name: Install dependencies
+        run: poetry install --sync --only dev
+      - name: Generate ${{ matrix.target }}
+        run: make generate-${{ matrix.target }}
+      - name: Check for changes
+        run: make lint-no-changes
+
+  lint:
+    strategy:
+      matrix:
+        python-version: ["3.9", "3.10", "3.11", "3.12"]
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          virtualenvs-create: false
+      - name: Install dependencies
+        run: poetry install --sync --only dev
+      - name: Lint
+        run: make lint
+
+  test-mlserver:
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-24.04
+          # - macos-13
+        # NOTE: There's no pre-built `grpcio` wheel for Python 3.11 yet
+        # https://github.com/grpc/grpc/issues/32454
+        python-version: ["3.9", "3.10", "3.11", "3.12"]
+        is-pr:
+          - ${{ github.event_name == 'pull_request' }}
+        exclude:
+          # MacOS tests take a lot of time, so we will run them only on merge
+          # From https://github.com/orgs/community/discussions/26253
+          - is-pr: true
+            os: macos-13
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Docker (missing on MacOS)
+        if: runner.os == 'macos'
+        run: ./hack/install-docker-macos.sh
+      - name: Install OpenMP (in MacOS)
+        if: runner.os == 'macOS'
+        run: brew install libomp
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - uses: conda-incubator/setup-miniconda@v3
+        with:
+          auto-update-conda: true
+          auto-activate-base: false
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          virtualenvs-create: false
+      - name: Install dependencies
+        run: poetry install --only test
+      - name: Test
+        run: |
+          if [[ ${{ runner.os == 'macOS' }} ]]; then
+            source ./hack/activate-libomp-macos.sh
+          fi
+          poetry run tox -e mlserver
+
+  test-runtimes:
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-24.04
+          # - macos-13
+        python-version: ["3.9", "3.10", "3.11", "3.12"]
+        tox-environment:
+          - sklearn
+          - xgboost
+          - lightgbm
+          - mlflow
+          - huggingface
+          - alibi-explain
+          - alibi-detect
+          - catboost
+        is-pr:
+          - ${{ github.event_name == 'pull_request' }}
+        exclude:
+          # MacOS tests take a lot of time, so we will run them only on merge
+          # From https://github.com/orgs/community/discussions/26253
+          - is-pr: true
+            os: macos-13
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install OpenMP (in MacOS)
+        if: runner.os == 'macOS'
+        run: brew install libomp
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - uses: conda-incubator/setup-miniconda@v3
+        with:
+          auto-update-conda: true
+          auto-activate-base: false
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          virtualenvs-create: false
+      - name: Install dependencies
+        run: poetry install --only test
+      - name: Test
+        run: |
+          if [[ ${{ runner.os == 'macOS' }} ]]; then
+            source ./hack/activate-libomp-macos.sh
+          fi
+          poetry run tox -c ./runtimes/${{ matrix.tox-environment }}
+
+  # Ensure that having all the runtimes installed together works
+  test-all-runtimes:
+    if: github.event_name == 'push'
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-24.04
+          # - macos-12
+        python-version: ["3.9", "3.10", "3.11", "3.12"]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Maximize build space
+        if: runner.os == 'Linux'
+        uses: easimon/maximize-build-space@master
+        with:
+          remove-dotnet: 'true'
+          remove-haskell: 'true'
+          remove-android: 'true'
+          remove-codeql: 'true'
+          remove-docker-images: 'true'
+          overprovision-lvm: 'true'
+          swap-size-mb: 1024
+      - uses: actions/checkout@v4
+      - name: Setup Docker (missing on MacOS)
+        if: runner.os == 'macOS'
+        run: ./hack/install-docker-macos.sh
+      - name: Downgrade OpenMP (in MacOS)
+        if: runner.os == 'macos'
+        run: |
+          # Recent versions of OpenMP cause segfaults in MacOS when training
+          # LightGBM / XGBoost models (but only when Torch is present)
+          # https://github.com/microsoft/LightGBM/issues/4229
+          # https://github.com/autogluon/autogluon/issues/1442
+          wget https://raw.githubusercontent.com/chenrui333/homebrew-core/0094d1513ce9e2e85e07443b8b5930ad298aad91/Formula/libomp.rb
+          brew unlink libomp
+          brew install --build-from-source ./libomp.rb
+          brew list --version libomp
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - uses: conda-incubator/setup-miniconda@v3
+        with:
+          auto-update-conda: true
+          auto-activate-base: false
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          virtualenvs-create: false
+      - name: Install dependencies
+        run: poetry install --only test
+      - name: Test
+        run: |
+          if [[ ${{ runner.os == 'macOS' }} ]]; then
+            source ./hack/activate-libomp-macos.sh
+          fi
+          poetry run tox -e all-runtimes

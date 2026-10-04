@@ -3,10 +3,10 @@ requires = ["setuptools>=68"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "streamserve-workbench"
-version = "0.1.0"
-description = "CPU-testable streaming inference service"
-requires-python = ">=3.11"
+name = "fleetserve-workbench"
+version = "0.5.0"
+description = "MLServer-based multi-region inference operations workbench"
+requires-python = ">=3.12,<3.13"
 dependencies = []
 
 [tool.setuptools.packages.find]

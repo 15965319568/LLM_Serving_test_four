@@ -1,0 +1,8 @@
+{
+  "schema": 1,
+  "model": "chat",
+  "stable": "r20261003",
+  "candidate": "r20261004",
+  "candidate_percent": 20,
+  "mode": "single-region-lab"
+}

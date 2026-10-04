@@ -20,7 +20,9 @@ class Journal:
         self.db.row_factory = sqlite3.Row
         self.db.execute('PRAGMA foreign_keys=ON')
         self.db.execute('PRAGMA journal_mode=WAL')
-        self.db.execute('PRAGMA synchronous=FULL')
+        # WAL NORMAL preserves committed transactions across process crashes.
+        # The service contract does not claim survival of host power loss.
+        self.db.execute('PRAGMA synchronous=NORMAL')
         self.db.executescript('''
         CREATE TABLE IF NOT EXISTS requests (
           id TEXT PRIMARY KEY, tenant TEXT NOT NULL, request_key TEXT NOT NULL,

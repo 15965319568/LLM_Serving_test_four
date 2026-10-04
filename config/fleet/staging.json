@@ -1,0 +1,14 @@
+{
+  "policy": {
+    "min_samples": 1,
+    "required_cohorts": [
+      "interactive"
+    ]
+  },
+  "telemetry": {
+    "required_sources": [
+      "edge",
+      "quality"
+    ]
+  }
+}

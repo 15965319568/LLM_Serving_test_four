@@ -1,0 +1,179 @@
+[project]
+name = "mlserver"
+version = "1.7.0.dev0"
+description = "MLServer"
+authors = [
+    {name = "Seldon Technologies Ltd.", email="hello@seldon.io"}]
+license = "Apache-2.0"
+readme = "README.md"
+requires-python = ">=3.9,<3.13"
+classifiers = [
+    "Operating System :: POSIX",
+    "Operating System :: MacOS"
+]
+include =  ["mlserver/rest/openapi/*.json"]
+dependencies = [
+    "click",
+    "fastapi>=0.88.0,!=0.89.0,<0.125.0",
+    "python-dotenv",
+    "grpcio>=1.67.1",
+    "numpy",
+    "pandas",
+    "protobuf>=5.29.5,<7.0.0",
+    "uvicorn>=0.38.0",
+    "starlette-exporter",
+    "py-grpc-prometheus",
+    "aiokafka",
+    "tritonclient[http]>=2.5,<2.61",
+    "geventhttpclient",
+    "gevent",
+    "aiofiles",
+    "orjson>=3.10,<4",
+    "uvloop>=0.22.1,<0.24; sys_platform != 'win32' and (sys_platform != 'cygwin' and platform_python_implementation != 'PyPy')",
+    "pydantic>=2.7.1,<3.0.0",
+    "pydantic-settings>=2.3.0,<3.0.0",
+    "python-multipart",
+    # Required for Python <3.10 to access data files at runtime
+    "importlib-resources>=5.12,<7.0",
+    "opentelemetry-sdk>=1.22.0,<2.0.0",
+    "opentelemetry-instrumentation-fastapi>=0.43b0",
+    "opentelemetry-instrumentation-grpc>=0.43b0",
+    "opentelemetry-exporter-otlp-proto-grpc>=1.22.0,<2.0.0",
+]
+
+[project.scripts]
+mlserver = 'mlserver.cli:main'
+
+[tool.black]
+exclude = '''
+(
+  mlserver\.egg-info
+  | \.mypy_cache
+  | \.git
+  | \.tox
+  | dist
+  | venv
+)
+'''
+
+[tool.mypy]
+ignore_missing_imports = true
+plugins = "pydantic.mypy"
+exclude = [
+  'mlserver\.egg-info',
+  '\.mypy_cache',
+  '\.git',
+  '\.tox',
+  'dist',
+  'venv',
+]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+addopts = "--import-mode=importlib"
+norecursedirs = [
+    "runtimes"]
+
+[tool.poetry.group.test.dependencies]
+tox = "4.24.2"
+
+[tool.poetry.group.dev.dependencies]
+datamodel-code-generator = "0.26.0"
+grpcio-tools = ">=1.67.1"
+pytest = "8.4.2"
+exceptiongroup = "1.3.0"
+pytest-asyncio = "1.2.0"
+pytest-mock = "3.15.1"
+pytest-cases = "3.9.1"
+tox = "4.24.2"
+docker = "7.1.0"
+aiohttp = "3.12.14"
+aiohttp-retry = "2.9.1"
+## Used for FastAPI Async testing
+httpx = "0.27.0"
+kafka-python = "2.2.15"
+tenacity = "8.4.1"
+pyyaml = "6.0.1"
+conda-pack = "0.7.1"
+flake8 = "7.0.0"
+flake8-black = "0.4.0"
+mypy = "1.18.1"
+mypy-protobuf = "3.7.0"
+types-protobuf = "5.26.0.20240422"
+types-orjson = "3.6.2"
+types-aiofiles = "24.1.0.20250516"
+types-requests = "2.32.0.20250602"
+black = "24.10.0"
+pip-licenses = "4.4.0"
+pytest-xdist = "3.6.1"
+filelock = "^3.13.1"
+httpx-sse = ">=0.3.1,<0.5.0"
+
+[tool.poetry.group.docker.dependencies]
+tensorflow = "^2.16"
+
+[tool.poetry.group.all-runtimes]
+optional = true
+
+[tool.poetry.group.all-runtimes.dependencies]
+mlserver-sklearn = {path = "./runtimes/sklearn", develop = true}
+mlserver-xgboost = {path = "./runtimes/xgboost", develop = true}
+mlserver-lightgbm = {path = "./runtimes/lightgbm", develop = true}
+mlserver-mlflow = {path = "./runtimes/mlflow", develop = true}
+mlserver-huggingface = {path = "./runtimes/huggingface", develop = true}
+mlserver-alibi-explain = {path = "./runtimes/alibi-explain", develop = true}
+mlserver-alibi-detect = {path = "./runtimes/alibi-detect", develop = true}
+mlserver-catboost = {path = "./runtimes/catboost", develop = true}
+
+[tool.poetry.group.test-all-runtimes]
+optional = true
+
+[tool.poetry.group.test-all-runtimes.dependencies]
+mlserver-sklearn = {path = "./runtimes/sklearn", develop = false}
+mlserver-xgboost = {path = "./runtimes/xgboost", develop = false}
+mlserver-lightgbm = {path = "./runtimes/lightgbm", develop = false}
+mlserver-mlflow = {path = "./runtimes/mlflow", develop = false}
+mlserver-huggingface = {path = "./runtimes/huggingface", develop = false}
+mlserver-alibi-explain = {path = "./runtimes/alibi-explain", develop = false}
+mlserver-alibi-detect = {path = "./runtimes/alibi-detect", develop = false}
+mlserver-catboost = {path = "./runtimes/catboost", develop = false}
+
+
+[tool.poetry.group.all-runtimes-dev]
+optional = true
+
+[tool.poetry.group.all-runtimes-dev.dependencies]
+## Dev dependencies from Alibi-Explain
+requests-mock = "~1.11.0"
+types-requests = ">=2.28.11.5,<2.33.0.0"
+
+## Dev dependencies from MLflow
+torch = "^2.4"
+pytorch-lightning = "^2.4"
+torchmetrics = "1.6.0"
+torchvision = "0.19.1"
+mlflow = ">=3.0.0"
+
+## Dev dependencies from HuggingFace
+# TODO: Relax when we deprecate Conversation pipeline
+# see: https://github.com/SeldonIO/MLServer/issues/1955
+transformers = "4.41.2"
+
+[tool.poetry.group.docs]
+optional = true
+
+[tool.poetry.group.docs.dependencies]
+Sphinx = "6.2.1"
+sphinx_material = "0.0.36"
+readthedocs-sphinx-search = "0.3.2"
+myst-parser = "2.0.0"
+sphinxcontrib-bibtex = "2.5.0"
+autodoc_pydantic = "^2.2.0"
+sphinx-click = "6.0.0"
+sphinx_design = "0.4.1"
+sphinx-autobuild = "2024.4.16"
+sphinx-copybutton = "^0.5.2"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

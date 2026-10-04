@@ -22,15 +22,15 @@ async def main():
         source = backend.generate(work)
         try:
             async for event in source:
-                emit({'id': work.request_id, 'event': asdict(event)})
+                emit({'id': work.request_id, 'attempt': work.attempt, 'event': asdict(event)})
         except asyncio.CancelledError:
             pass
         except Exception:
-            emit({'id': work.request_id, 'error': 'worker_error'})
+            emit({'id': work.request_id, 'attempt': work.attempt, 'error': 'worker_error'})
         finally:
             await source.aclose()
-            emit({'id': work.request_id, 'end': True})
-            jobs.pop(work.request_id, None)
+            emit({'id': work.request_id, 'attempt': work.attempt, 'end': True})
+            jobs.pop((work.request_id, work.attempt), None)
 
     reader = asyncio.StreamReader()
     protocol = asyncio.StreamReaderProtocol(reader)
@@ -40,9 +40,9 @@ async def main():
         command = json.loads(line)
         if command['op'] == 'generate':
             value = command['work']
-            jobs[value['request_id']] = asyncio.create_task(generate(value))
+            jobs[(value['request_id'], value['attempt'])] = asyncio.create_task(generate(value))
         elif command['op'] == 'cancel':
-            task = jobs.get(command['id'])
+            task = jobs.get((command['id'], command.get('attempt', 1)))
             if task:
                 task.cancel()
     for task in list(jobs.values()):

@@ -3,6 +3,7 @@ import asyncio
 import json
 from urllib.parse import parse_qs
 from .auth import require_admin, tenant_for
+from .config import ModelSpec
 from .protocol import Request, ServiceError, Ticket
 from .sse import frame
 
@@ -84,7 +85,22 @@ class Application:
         method, path = scope['method'], scope['path']
         try:
             if method == 'GET' and path == '/health':
-                return await self._json(send, 200, {'ready': self.engine.started and not self.engine.closed})
+                return await self._json(send, 200, {'ready': self.engine.accepting})
+            if path.startswith('/admin/'):
+                require_admin(self.engine.settings, headers)
+                if method == 'POST' and path == '/admin/drain':
+                    return await self._json(send, 200, await self.engine.drain())
+                if method == 'POST' and path == '/admin/activate':
+                    value = await self._body(receive)
+                    if set(value) != {'alias', 'spec', 'expected_epoch', 'operation_id'} or not isinstance(value['spec'], dict):
+                        raise ServiceError('invalid_activation', 'invalid activation fields')
+                    try:
+                        spec = ModelSpec(**value['spec'])
+                        result = await self.engine.activate(value['alias'], spec, value['expected_epoch'], value['operation_id'])
+                    except (TypeError, AttributeError):
+                        raise ServiceError('invalid_activation', 'invalid activation parameters') from None
+                    return await self._json(send, 200, result)
+                raise ServiceError('not_found', 'route not found', 404)
             if method == 'GET' and path == '/metrics':
                 require_admin(self.engine.settings, headers)
                 await send({'type': 'http.response.start', 'status': 200, 'headers': [(b'content-type', b'text/plain; version=0.0.4')]})

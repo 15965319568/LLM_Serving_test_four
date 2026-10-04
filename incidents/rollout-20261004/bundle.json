@@ -1,0 +1,57 @@
+{
+  "schema": 1,
+  "scope": "synthetic local reproduction inputs",
+  "receipts": "admissions.csv",
+  "sources": [
+    {
+      "producer": "edge",
+      "file": "edge.jsonl"
+    },
+    {
+      "producer": "quality",
+      "file": "quality.jsonl"
+    },
+    {
+      "producer": "exporter",
+      "file": "export-v1.jsonl.gz"
+    },
+    {
+      "producer": "worker",
+      "file": "worker.jsonl"
+    }
+  ],
+  "watermarks": [
+    {
+      "producer": "edge",
+      "cohort": "interactive",
+      "through": 200
+    },
+    {
+      "producer": "edge",
+      "cohort": "batch",
+      "through": 200
+    },
+    {
+      "producer": "quality",
+      "cohort": "interactive",
+      "through": 200
+    },
+    {
+      "producer": "quality",
+      "cohort": "batch",
+      "through": 200
+    }
+  ],
+  "release": {
+    "release_id": "rollout-20261004",
+    "alias": "chat",
+    "revision": "r20261004",
+    "candidate_bps": 2000,
+    "expected_epoch": 0,
+    "operation_id": "deploy.20261004"
+  },
+  "window": [
+    100,
+    200
+  ]
+}

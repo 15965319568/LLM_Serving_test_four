@@ -1,0 +1,21 @@
+{
+  "tenants": {
+    "north": {
+      "regions": [
+        "east"
+      ]
+    }
+  },
+  "policy": {
+    "required_cohorts": [
+      "interactive",
+      "batch"
+    ]
+  },
+  "telemetry": {
+    "required_sources": [
+      "edge",
+      "quality"
+    ]
+  }
+}
