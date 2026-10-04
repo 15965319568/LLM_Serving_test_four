@@ -1,1 +1,3 @@
 * text=auto eol=lf
+# Captured evidence retains its original bytes for provenance hashes.
+incidents/production-20261004/** -text whitespace=cr-at-eol

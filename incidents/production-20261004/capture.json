@@ -1,0 +1,54 @@
+{
+  "files": [
+    {
+      "partition": "worker-observations",
+      "path": "deliveries/worker-observations.0.jsonl.gz",
+      "format": "jsonl"
+    },
+    {
+      "partition": "worker-observations",
+      "path": "deliveries/worker-observations.1.jsonl.gz",
+      "format": "jsonl"
+    },
+    {
+      "partition": "edge-west",
+      "path": "deliveries/edge-west.1.jsonl.gz",
+      "format": "jsonl"
+    },
+    {
+      "partition": "edge-east",
+      "path": "deliveries/edge-east.0.jsonl.gz",
+      "format": "jsonl"
+    },
+    {
+      "partition": "edge-east",
+      "path": "deliveries/edge-east.1.jsonl.gz",
+      "format": "jsonl"
+    },
+    {
+      "partition": "quality-backfill",
+      "path": "deliveries/quality-backfill.0.jsonl.gz",
+      "format": "jsonl"
+    },
+    {
+      "partition": "edge-west",
+      "path": "deliveries/edge-west.0.jsonl.gz",
+      "format": "jsonl"
+    },
+    {
+      "partition": "legacy-export",
+      "path": "deliveries/legacy-export.1.csv",
+      "format": "csv"
+    },
+    {
+      "partition": "legacy-export",
+      "path": "deliveries/legacy-export.0.csv",
+      "format": "csv"
+    },
+    {
+      "partition": "quality-backfill",
+      "path": "deliveries/quality-backfill.1.jsonl.gz",
+      "format": "jsonl"
+    }
+  ]
+}

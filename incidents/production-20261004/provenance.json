@@ -1,0 +1,54 @@
+{
+  "origin": "synthetic actual CPU execution",
+  "seed": 714,
+  "source": "fleetserve.production.replay",
+  "transport": [
+    {
+      "partition": "edge-east",
+      "original_envelopes": 23,
+      "deliveries": 27
+    },
+    {
+      "partition": "edge-west",
+      "original_envelopes": 22,
+      "deliveries": 26
+    },
+    {
+      "partition": "quality-backfill",
+      "original_envelopes": 122,
+      "deliveries": 140
+    },
+    {
+      "partition": "legacy-export",
+      "original_envelopes": 42,
+      "deliveries": 48
+    },
+    {
+      "partition": "worker-observations",
+      "original_envelopes": 42,
+      "deliveries": 48
+    }
+  ],
+  "sha256": {
+    "capture.json": "349b8fbaf28fcdbbbaefbfaf20c7ffadfdcb4d6b60961bb3a883cfa77ff8609b",
+    "deliveries/edge-east.0.jsonl.gz": "a5cb2390e9f0ac62eacb781c650809e10073a168ebc08318c58b293e72a3314f",
+    "deliveries/edge-east.1.jsonl.gz": "09dd2da063f97ac4e3728b1a54d9e46110335ec0c45ea12cf5c36de3b5957f1b",
+    "deliveries/edge-west.0.jsonl.gz": "b843d15699d96bd63eff3f4d5ca0eccd6b8661e12d96979457e2170b192607e1",
+    "deliveries/edge-west.1.jsonl.gz": "64a1eb1cd1bb8482c7bd7e5e0cffdff0d8ffd760614b15b5b3b6646c9a4e0182",
+    "deliveries/legacy-export.0.csv": "f9fa9a631cbfc6d27a7bc4af5e5a7eee76b5986f7870618898b7710ca672105d",
+    "deliveries/legacy-export.1.csv": "d536b24f03d4bf9b4a27f9d7689c52bc835e72a1c2f0bff7990a3b420608d5aa",
+    "deliveries/quality-backfill.0.jsonl.gz": "53f2eebd97829840f3fa261e1ea66d8ff355df48fcc172ecbabdf7817d242ae9",
+    "deliveries/quality-backfill.1.jsonl.gz": "13101466cc26419e4f3d8ccec1e59bb72f8fbff40f55b877d86505afddad98d9",
+    "deliveries/worker-observations.0.jsonl.gz": "6387043e30e0b07c3d319ab3293342f574553b1a13084caa1384734ad6efbbda",
+    "deliveries/worker-observations.1.jsonl.gz": "0d79ea24e4ea32df5989f1b57554e7679e4f1e170148d958c6970b4173938cf4",
+    "partitions.json": "37dda5dd11ab0dd03116e45b7847732353c810f2cdfc19f52c75f884a1ddd1c4",
+    "raw/admissions.csv": "6e91369e6c44ee16ad63974bc03d7f95fd54dc8671f17d5eef796608870fe1f8",
+    "raw/client.jsonl": "5fc06d48ad3705e6aded0111919f07b34644fa450fa3a7704ffe16acc6c4f072",
+    "raw/controller.jsonl": "9052b1705b4b772e554204507a7c29e31615fa23be3625185c94548920679f82",
+    "raw/quality-review.jsonl": "f9d13cd46b2bae25b1a788c731e8a0fa78b7544b0d04407c0b0107d7a0867d8b",
+    "raw/terminal.jsonl": "7d0d69f4790e0a6c47dd8a450e20d301eed85a6fbe81324f32b2c31fe63386a6",
+    "raw/workers/155196.jsonl": "6d809f2f51eb8d9696a6433a9b711af0ef83479d10a598e036b9829ae4ee6374",
+    "raw/workers/155197.jsonl": "521047a910eae40cd58d531927d209641a30dfcf74d99cc5377fa86e820bd809"
+  },
+  "quality": "CPU exercise: one minus mean relative absolute error against x*2; provisional export and reviewer revision coexist"
+}

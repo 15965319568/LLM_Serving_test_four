@@ -7,3 +7,7 @@ state/
 *.owner
 reports/
 .env
+
+.metrics/
+
+.pytest_cache/

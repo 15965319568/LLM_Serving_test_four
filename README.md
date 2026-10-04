@@ -1,4 +1,4 @@
-# FleetServe / MLServer inference operations workbench — v6
+# FleetServe / MLServer inference operations workbench — v7
 
 这是基于 SeldonIO/MLServer 固定源码的 CPU serving 工程。自有控制层管理双区域租约、
 灰度路由、原始遥测、质量回填、发布判定和崩溃恢复；请求经过实际 MLServer registry、
@@ -8,6 +8,43 @@ StreamServe提供持久化SSE、停止词、重试与资源预算。任务见 TA
 v6增加了试点使用的双副本数值服务。批处理会实际进入MLServer进程池；MatrixRuntime
 处理多行、多输入头的CPU载荷。此入口与历史流式/灰度入口共享上游核心及协议组件。
 它们有不同的消费者和状态目录，不能因为只运行一个入口就删除另一个入口。
+
+
+## 联合生产入口
+
+本次任务入口将区域路由、数值执行和原始采集接入同一 Fleet。它使用已发布的区域路由选择
+真实执行实例，接纳事实进入证据库，采集与质量回填用于原有灰度控制。语义见
+docs/production-contract.md；incidents/production-20261004 为本版实际起始工程重放材料。
+独立 Fabric、流式和离线预览入口仍有各自消费者，不能通过统一删改绕过兼容问题。
+
+在下文依赖和 PYTHONPATH 设置完成后，使用新的状态目录：
+
+```bash
+python -m fleetserve.production --state state/production init
+python -m fleetserve.production --state state/production serve --port 8083
+```
+
+另一个终端调用业务 alias（此入口的 Idempotency-Key 必填）：
+
+```bash
+curl -sS http://127.0.0.1:8083/v2/models/chat/infer \
+  -H 'Authorization: Bearer north-local' -H 'Idempotency-Key: numeric-demo' \
+  -H 'Content-Type: application/json' \
+  -d '{"id":"external-id","inputs":[{"name":"x","datatype":"FP64","shape":[2,1],"data":[1,3]}]}'
+```
+
+同一服务保留 `/admin/releases`、`/admin/evaluate`、`/admin/apply`、`/admin/reconcile` 等管理
+接口。采集接口 `/admin/capture/receive` 接收分片名和原始信封；不应直接把所有记录当成
+客户终态或质量样本。停止在线服务后可用 `production import` 重放文件。
+
+从当前源码重新运行整个合成采集演练（每次选择新输出目录）：
+
+```bash
+python -m fleetserve.production.replay --output state/new-capture
+```
+
+入口可启动和公开 smoke 通过不代表事故已修复。工具生成观测，不提供标准答案。
+原始记录、重投副本、来源登记和生成来源各自保留，不应先相信某一张汇总表。
 
 ## 环境与入口
 

@@ -69,6 +69,7 @@ class LeaseRegistry:
                                     (row['worker'], row['generation']))['n']
             # A heartbeat reports capacity available before this coordinator's
             # reservations; local reservations must still be accounted for.
+            active += getattr(self, 'reserved_extra', lambda worker, generation: 0)(row['worker'], row['generation'])
             if min(row['free'], row['capacity']) > active:
                 result.append({**row, 'reservations': active})
         return sorted(result, key=lambda r: (r['reservations'], r['worker']))

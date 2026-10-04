@@ -1,0 +1,5 @@
+{
+  "workers": 2,
+  "revision_factors": {"r20261003": 2.0, "r20261004": 3.0},
+  "partitions": {"edge-east": "edge", "edge-west": "edge", "quality-backfill": "quality", "legacy-export": "exporter", "worker-observations": "worker"}
+}

@@ -58,7 +58,7 @@ class ServingFabric:
                 await self.replicas.unload(alias,old['generation'])
             return result
 
-    async def infer(self,tenant,alias,request):
+    async def infer(self,tenant,alias,request,*,admission_id=None):
         identifier(tenant,'tenant')
         if not self.accepting: raise FleetError('draining',status=503)
         rows=validate_request(request)
@@ -67,7 +67,7 @@ class ServingFabric:
         params=request.parameters.model_dump() if request.parameters else {}
         if 'tenant' in params and params['tenant']!=tenant: raise FleetError('tenant_conflict',status=403)
         request.parameters=Parameters(**dict(params,tenant=tenant))
-        identity=uuid.uuid4().hex
+        identity=identifier(admission_id,'admission_id') if admission_id is not None else uuid.uuid4().hex
         self.journal.admit(identity,tenant,deployment,request,rows)
         task=asyncio.create_task(self.replicas.infer(alias,deployment['generation'],request))
         self.tasks.add(task)

@@ -1,0 +1,7 @@
+{
+  "edge-east": "edge",
+  "edge-west": "edge",
+  "quality-backfill": "quality",
+  "legacy-export": "exporter",
+  "worker-observations": "worker"
+}
