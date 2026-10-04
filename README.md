@@ -1,4 +1,4 @@
-> 当前任务为V7.2；正式验收范围见[TASK.md](TASK.md)和[验收文档](docs/acceptance-v7.2.md)。下文保留完整工程背景与各历史入口。
+> 当前任务为V7.3；正式范围以[TASK.md](TASK.md)和[验收文档](docs/acceptance-v7.3.md)为准。下文保留历史背景与入口，其更广的待修表述不增加本轮评分条件。
 
 # FleetServe / MLServer inference operations workbench — v7
 
