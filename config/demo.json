@@ -1,0 +1,8 @@
+{
+  "models": {"chat": {"revision": "stable", "tokenizer": "unicode-v1", "context_limit": 1024}},
+  "tenants": {"demo": {"token": "demo-token", "max_active": 2, "max_queued": 32, "weight": 1}},
+  "max_active": 4,
+  "kv_tokens": 4096,
+  "cache_tokens": 4096,
+  "admin_token": "local-admin"
+}

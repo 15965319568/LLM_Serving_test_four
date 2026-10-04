@@ -1,5 +1,9 @@
 __pycache__/
 *.pyc
-output/
-fixtures/
+.venv/
+state/
+*.sqlite3*
+!fixtures/legacy-v1.sqlite3
+*.owner
+reports/
 .env

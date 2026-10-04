@@ -3,16 +3,11 @@ requires = ["setuptools>=68"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "inference-observer"
+name = "streamserve-workbench"
 version = "0.1.0"
+description = "CPU-testable streaming inference service"
 requires-python = ">=3.11"
 dependencies = []
-
-[project.scripts]
-inference-observer = "inference_observer.cli:main"
-
-[tool.setuptools]
-package-dir = {"" = "src"}
 
 [tool.setuptools.packages.find]
 where = ["src"]

@@ -1,11 +1,39 @@
-# LLM Serving 发布观测与分批恢复
+# StreamServe workbench
 
-这是 Harbor 任务的公开初始代码。需要修复历史证据重建、服务指标、门禁以及联合安置与预热切流规划。完整可见合同在 TASK.md 和 docs/；任务运行时提供合成 fixtures。
+This repository contains an original, runnable Python inference-serving workbench.
+It has tenant admission, KV reservations, prefix cache leases, incremental stop
+matching, a SQLite request journal, SSE replay, an ASGI application and a real
+subprocess worker transport. The CPU drivers model a token-producing worker;
+they do not implement neural network inference or require a GPU/API credential.
+
+The current implementation is a **single-deployment** service. The engineering
+assignment in `TASK.md` adds reliable live revision changes and restart semantics.
+Existing behavior is covered by runnable compatibility tests. No published issue
+or patch is used as the task source, and no implementation was deleted from an
+upstream repository to manufacture the starting state.
 
 ```bash
-export PYTHONPATH=src
-python -m inference_observer --input fixtures --output output
-python scripts/check_contract.py --input fixtures --output output
+export PYTHONPATH="$PWD/src"
+python3 -m unittest discover -s tests -v
+python3 -m streamserve --config config/demo.json --backend process --port 8081
 ```
 
-公开自检只验证格式与基本一致性。最终验收还会独立重算历史业务语义、全局最优性与同 schema 输入变化。
+Example from another terminal:
+
+```bash
+curl -N http://127.0.0.1:8081/v1/generate \
+  -H 'Authorization: Bearer demo-token' \
+  -H 'Idempotency-Key: hello-1' -H 'Content-Type: application/json' \
+  -d '{"model":"chat","prompt":"Hello","max_tokens":4,"stream":true}'
+```
+
+Demo credentials are public local test values. No paid inference endpoint is used
+inside the workbench. Use Linux/WSL for subprocess and server tests. Runtime and
+tests use only Python's standard library; editable installation is unnecessary.
+
+Architecture and compatibility: `docs/architecture.md`.
+New behavior: `docs/revision-contract.md`, `docs/persistence-contract.md`,
+`docs/stream-contract.md`, `docs/operations-contract.md`.
+
+Public tests document compatibility, not complete acceptance of the new feature.
+You may add tests and refactor modules. Preserve the documented public interfaces.
