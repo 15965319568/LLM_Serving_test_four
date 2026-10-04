@@ -1,3 +1,5 @@
+> 当前任务为V7.2；正式验收范围见[TASK.md](TASK.md)和[验收文档](docs/acceptance-v7.2.md)。下文保留完整工程背景与各历史入口。
+
 # FleetServe / MLServer inference operations workbench — v7
 
 这是基于 SeldonIO/MLServer 固定源码的 CPU serving 工程。自有控制层管理双区域租约、
