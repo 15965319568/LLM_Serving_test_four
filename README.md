@@ -34,6 +34,8 @@ tests use only Python's standard library; editable installation is unnecessary.
 Architecture and compatibility: `docs/architecture.md`.
 New behavior: `docs/revision-contract.md`, `docs/persistence-contract.md`,
 `docs/stream-contract.md`, `docs/operations-contract.md`.
+Baseline fault observations: `fixtures/observations/README.md`. These are locally
+captured inputs and outputs, with no root-cause analysis or repair implementation.
 
 Public tests document compatibility, not complete acceptance of the new feature.
 You may add tests and refactor modules. Preserve the documented public interfaces.

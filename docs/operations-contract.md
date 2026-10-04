@@ -14,8 +14,9 @@ POST `/admin/activate` 使用管理员 Bearer 凭证，JSON 结构：
 `await Engine.drain()` 不强行取消旧请求，也不关闭 journal。新幂等键返回
 draining（503）；已接纳请求的相同幂等重放继续可用；不同内容复用旧键仍为409。
 drain 后可以读取 status、事件和 metrics，也可以 close。GET `/health` 此时 ready=false。
-`close()` 停止接纳，取消剩余 queued/running 请求，等待所有生成器关闭后卸载后端，
-关闭 journal 并释放进程所有权。重复 close 安全；可在 drain/activate 等操作期间 close。
+`close()` 期间不再接纳新工作，剩余 queued/running 请求应以取消结束；完成时所有
+生成器已关闭、后端已卸载、journal 已关闭且进程所有权已释放。清理过程中仍在使用
+的资源必须有效。重复 close 安全；可在 drain/activate 等操作期间 close。
 close 完成后，除重复 close 外不再调用该 Engine 实例；重放继续可用的承诺针对 drain
 阶段和使用同一 journal 重新启动的实例。
 
@@ -25,9 +26,9 @@ close 完成后，除重复 close 外不再调用该 Engine 实例；重放继�
 KV 使用和 cache.pinned 均为0；仍被 alias 引用的当前模型可保持加载直到 close。
 此接口描述逻辑状态，不要求特定内部数据结构。
 
-验收运行公开兼容测试、控制面并发、持久化迁移、生命周期故障、跨进程恢复、真实
-HTTP/SSE、两种后端和多组可复现的事件交错。测试数据与输入顺序会变化，不应硬编码
-示例 ID、prompt 或特定 revision。故障注入使用公开 Backend/WorkerEvent 协议。
+验收观察公开接口、持久化数据和实际网络/进程行为是否满足上述契约，并保留原有兼容
+要求。输入与操作时序会变化，不应硬编码示例 ID、prompt、revision 或观测文件的内容。
+故障注入使用公开 Backend/WorkerEvent 协议。
 隐藏验收实现不会提供给解题模型，但不引入文档之外的字段或私有正确字符串。
 
 所有测试使用 CPU，不依赖外网、商业 API 或睡眠耗时来制造难度。计分按完整行为正确性

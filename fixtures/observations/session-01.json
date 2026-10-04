@@ -1,0 +1,155 @@
+{
+  "origin": "local CPU fault-injection capture, not a production incident",
+  "baseline_commit": "f65fe444f28fc8646ea86de17f8b372df9201777",
+  "request": {
+    "tenant": "demo",
+    "key": "observation-01",
+    "model": "chat",
+    "prompt": "direction",
+    "max_tokens": 8,
+    "stop": []
+  },
+  "observation": [
+    {
+      "surface": "client",
+      "ticket": {
+        "request_id": "66ad1fe00bb3420eb1c571bc2e6f6ab3",
+        "tenant": "demo",
+        "revision": "stable"
+      }
+    },
+    {
+      "surface": "backend",
+      "generation": {
+        "request_id": "66ad1fe00bb3420eb1c571bc2e6f6ab3",
+        "revision": "stable",
+        "attempt": 1,
+        "prompt_tokens": [
+          100,
+          105,
+          114,
+          101,
+          99,
+          116,
+          105,
+          111,
+          110
+        ],
+        "max_tokens": 8
+      }
+    },
+    {
+      "surface": "backend",
+      "delivery": {
+        "attempt": 1,
+        "index": 0,
+        "text": "north ",
+        "finish_reason": null
+      }
+    },
+    {
+      "surface": "backend",
+      "delivery": {
+        "attempt": 1,
+        "index": 0,
+        "text": "north ",
+        "finish_reason": null
+      }
+    },
+    {
+      "surface": "backend",
+      "delivery": {
+        "attempt": 1,
+        "index": 1,
+        "text": "south",
+        "finish_reason": null
+      }
+    },
+    {
+      "surface": "backend",
+      "delivery": {
+        "attempt": 1,
+        "index": 2,
+        "text": "",
+        "finish_reason": "stop"
+      }
+    },
+    {
+      "surface": "client",
+      "events": [
+        {
+          "request_id": "66ad1fe00bb3420eb1c571bc2e6f6ab3",
+          "seq": 1,
+          "kind": "accepted",
+          "data": {
+            "model": "chat",
+            "revision": "stable"
+          }
+        },
+        {
+          "request_id": "66ad1fe00bb3420eb1c571bc2e6f6ab3",
+          "seq": 2,
+          "kind": "delta",
+          "data": {
+            "text": "north "
+          }
+        },
+        {
+          "request_id": "66ad1fe00bb3420eb1c571bc2e6f6ab3",
+          "seq": 3,
+          "kind": "delta",
+          "data": {
+            "text": "north "
+          }
+        },
+        {
+          "request_id": "66ad1fe00bb3420eb1c571bc2e6f6ab3",
+          "seq": 4,
+          "kind": "delta",
+          "data": {
+            "text": "south"
+          }
+        },
+        {
+          "request_id": "66ad1fe00bb3420eb1c571bc2e6f6ab3",
+          "seq": 5,
+          "kind": "terminal",
+          "data": {
+            "reason": "stop",
+            "state": "completed",
+            "usage": {
+              "completion_tokens": 3,
+              "prompt_tokens": 9
+            }
+          }
+        }
+      ]
+    },
+    {
+      "surface": "status",
+      "value": {
+        "id": "66ad1fe00bb3420eb1c571bc2e6f6ab3",
+        "revision": "stable",
+        "state": "completed",
+        "prompt_tokens": 9,
+        "output_tokens": 3,
+        "error": null
+      }
+    },
+    {
+      "surface": "metrics",
+      "lines": [
+        "streamserve_requests_total{model=\"chat\",outcome=\"accepted\"} 1",
+        "streamserve_terminal_total{model=\"chat\",outcome=\"completed\"} 1",
+        "streamserve_tokens_total{model=\"chat\",outcome=\"generated\"} 3",
+        "streamserve_active 0",
+        "streamserve_queued 0",
+        "streamserve_kv_used 0",
+        "streamserve_cache_used 9",
+        "streamserve_cache_hits 0",
+        "streamserve_cache_misses 1",
+        "streamserve_cache_pinned 0"
+      ]
+    }
+  ]
+}

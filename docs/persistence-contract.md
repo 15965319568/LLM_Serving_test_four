@@ -27,5 +27,6 @@
 
 请求事件、输出 token 计数和终态保持事务一致，不能出现“终态已提交但缺少 terminal”
 或“重放有 token 但 usage 未计入”的状态。重启后的 accepted、terminal、tokens 计数
-与 journal 对账；TTFT 从新增持久化采样恢复，v1 没有该采样的历史记录不补造延迟。
+与 journal 对账；新版本记录的 TTFT 历史样本数、各桶计数和延迟总和在重启前后保持
+一致，v1 没有延迟记录的历史请求不补造延迟。存储布局与恢复方式由实现决定。
 不能把 prompt、幂等键、请求 ID、访问凭证加入 Prometheus 标签。

@@ -1,0 +1,110 @@
+{
+  "origin": "local CPU fault-injection capture, not a production incident",
+  "baseline_commit": "f65fe444f28fc8646ea86de17f8b372df9201777",
+  "request": {
+    "tenant": "demo",
+    "key": "observation-02",
+    "model": "chat",
+    "prompt": "checkpoint",
+    "max_tokens": 4,
+    "stop": []
+  },
+  "process_exit": {
+    "method": "os._exit",
+    "code": 23,
+    "host_and_filesystem_remained_running": true
+  },
+  "observation": [
+    {
+      "surface": "before_process_exit",
+      "ticket": {
+        "request_id": "c68884787982450a84e97db70fd518ba",
+        "tenant": "demo",
+        "revision": "stable"
+      },
+      "status": {
+        "id": "c68884787982450a84e97db70fd518ba",
+        "revision": "stable",
+        "state": "running",
+        "prompt_tokens": 10,
+        "output_tokens": 1,
+        "error": null
+      },
+      "events": [
+        {
+          "request_id": "c68884787982450a84e97db70fd518ba",
+          "seq": 1,
+          "kind": "accepted",
+          "data": {
+            "model": "chat",
+            "revision": "stable"
+          }
+        },
+        {
+          "request_id": "c68884787982450a84e97db70fd518ba",
+          "seq": 2,
+          "kind": "delta",
+          "data": {
+            "text": "one "
+          }
+        }
+      ],
+      "metrics": [
+        "streamserve_requests_total{model=\"chat\",outcome=\"accepted\"} 1",
+        "streamserve_tokens_total{model=\"chat\",outcome=\"generated\"} 1",
+        "streamserve_active 1",
+        "streamserve_queued 0",
+        "streamserve_kv_used 14",
+        "streamserve_cache_used 10",
+        "streamserve_cache_hits 0",
+        "streamserve_cache_misses 1",
+        "streamserve_cache_pinned 1"
+      ]
+    },
+    {
+      "surface": "after_restart_and_identical_submit",
+      "ticket": {
+        "request_id": "c68884787982450a84e97db70fd518ba",
+        "tenant": "demo",
+        "revision": "stable"
+      },
+      "status": {
+        "id": "c68884787982450a84e97db70fd518ba",
+        "revision": "stable",
+        "state": "running",
+        "prompt_tokens": 10,
+        "output_tokens": 1,
+        "error": null
+      },
+      "events": [
+        {
+          "request_id": "c68884787982450a84e97db70fd518ba",
+          "seq": 1,
+          "kind": "accepted",
+          "data": {
+            "model": "chat",
+            "revision": "stable"
+          }
+        },
+        {
+          "request_id": "c68884787982450a84e97db70fd518ba",
+          "seq": 2,
+          "kind": "delta",
+          "data": {
+            "text": "one "
+          }
+        }
+      ],
+      "backend_generate_calls": 0,
+      "metrics": [
+        "streamserve_active 0",
+        "streamserve_queued 0",
+        "streamserve_kv_used 0",
+        "streamserve_cache_used 0",
+        "streamserve_cache_hits 0",
+        "streamserve_cache_misses 0",
+        "streamserve_cache_pinned 0"
+      ]
+    }
+  ]
+}
