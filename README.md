@@ -39,10 +39,12 @@ python -m fleetserve --state state/replay begin rollout chat r20261004 --bps 200
 python -m fleetserve --state state/replay reconcile
 python -m fleetserve --state state/replay import incidents/rollout-20261004/bundle.json
 python -m fleetserve --state state/replay evaluate rollout --start 100 --end 200 --assessment replay.assessment
+python -m fleetserve --state state/replay progress rollout
 python -m fleetserve --state state/replay status
 ```
 
 这些命令用于重放证据，不代表起始版已经满足任务契约。每次新的独立演练使用新的state目录。
+生产profile启用逐阶段放量；单窗口评估的PROMOTE不等同于立即全量发布，见docs/progressive-rollout-contract.md。
 HTTP管理接口和Python API见契约；python -m fleetserve --help 显示其余运维命令。
 
 ## 工程布局与来源

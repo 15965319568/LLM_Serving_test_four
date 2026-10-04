@@ -10,7 +10,16 @@
     "required_cohorts": [
       "interactive",
       "batch"
-    ]
+    ],
+    "rollout": {
+      "steps_bps": [
+        2000,
+        5000,
+        10000
+      ],
+      "healthy_windows": 2,
+      "min_window_seconds": 30
+    }
   },
   "telemetry": {
     "required_sources": [

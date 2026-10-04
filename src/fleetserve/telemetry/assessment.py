@@ -27,6 +27,18 @@ class Assessor:
             if (old['release_id'],old['start'],old['end'],old['route_epoch'],old['evidence_version']) != (release_id,start,end,route['epoch'],version):
                 raise FleetError('assessment_conflict', 'assessment id already describes another snapshot', 409)
             return json.loads(old['payload'])
+        result = self.measure(release,route,start,end,assessment_id,version)
+        with self.store.transaction():
+            self.store.execute('INSERT INTO assessments VALUES (?,?,?,?,?,?,?,?,?)',
+                               (assessment_id,release_id,route['epoch'],start,end,result['evidence_digest'],version,result['decision'],canonical(result)))
+        return result
+
+    def preview(self, release, start, end):
+        route = self.releases.route(release['alias'])
+        return self.measure(release,route,start,end,'preview',self.evidence.version())
+
+    def measure(self, release, route, start, end, assessment_id, version):
+        release_id = release['id']
         stable, candidate = release['candidate_plan']['stable'], release['candidate_plan']['candidate']
         projection = project(self.store, release['alias'], {stable,candidate}, start, end)
         policy = self.config['policy']
@@ -70,7 +82,4 @@ class Assessor:
                   'metrics': metrics, 'mix_distance': distance, 'evidence_digest': projection['digest'],
                   'sample_ids': sorted(s['request_id'] for s in projection['samples']),
                   'ignored': projection['ignored']}
-        with self.store.transaction():
-            self.store.execute('INSERT INTO assessments VALUES (?,?,?,?,?,?,?,?,?)',
-                               (assessment_id,release_id,route['epoch'],start,end,projection['digest'],version,decision,canonical(result)))
         return result

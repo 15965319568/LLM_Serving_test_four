@@ -27,6 +27,7 @@ def parser():
     commands.add_parser('resolve')
     commands.add_parser('init')
     commands.add_parser('status')
+    progress = commands.add_parser('progress'); progress.add_argument('release')
     commands.add_parser('reconcile')
     commands.add_parser('accounting')
     audit = commands.add_parser('audit'); audit.add_argument('--after',type=int,default=0)
@@ -102,6 +103,7 @@ async def execute(args):
         if args.command=='serve':
             return await serve(fleet,args)
         if args.command=='status': return fleet.snapshot()
+        if args.command=='progress': return fleet.releases.progress(args.release)
         if args.command=='reconcile': return fleet.outbox.reconcile()
         if args.command=='accounting': return accounting(fleet.store)
         if args.command=='audit': return audit_page(fleet.store,args.after)

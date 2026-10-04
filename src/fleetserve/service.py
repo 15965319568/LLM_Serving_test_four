@@ -36,6 +36,7 @@ class Fleet:
             self.releases = Releases(self.store,self.planner,self.outbox,config,self.clock)
             self.evidence = EvidenceStore(self.store,config,self.clock)
             self.assessor = Assessor(self.store,self.evidence,self.releases,config)
+            self.releases.assessor = self.assessor
             self.gateway = Gateway(self.store,self.edge,self.planner,self.artifacts,self.evidence,
                                    config,self.clock,self.state_dir,backend_factory)
             self.controller = ReleaseLoop(self)

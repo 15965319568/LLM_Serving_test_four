@@ -1,4 +1,5 @@
 import json
+from .progression import Progression
 from ..errors import FleetError
 from ..util import canonical
 
@@ -30,6 +31,8 @@ class Outbox:
                     if row['release_id'] and not result.get('stale'):
                         self.store.execute('UPDATE releases SET phase=? WHERE id=? AND route_epoch=?',
                                            (row['target_phase'], row['release_id'], row['epoch']))
+                    if row['release_id'] and not result.get('stale') and row['target_phase']=='canary':
+                        Progression(self.store,self.clock).acknowledged(row['release_id'],row['epoch'])
                     self.store.audit('edge.ack', row['alias'], {'effect': row['id'], **result}, self.clock())
                 results.append({'effect': row['id'], **result})
             except FleetError as error:

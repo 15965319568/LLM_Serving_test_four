@@ -1,4 +1,6 @@
 import json
+from copy import deepcopy
+from .progression import Progression
 from ..errors import FleetError
 from ..util import canonical, digest, identifier, integer
 
@@ -7,6 +9,11 @@ class Releases:
     def __init__(self, store, planner, outbox, config, clock):
         self.store, self.planner, self.outbox = store, planner, outbox
         self.config, self.clock = config, clock
+        self.progression = Progression(store,clock)
+
+    def progress(self, release_id):
+        self.get(release_id)
+        return self.progression.get(release_id)
 
     def bootstrap(self):
         with self.store.transaction():
@@ -50,6 +57,7 @@ class Releases:
                                (release_id, alias, 'canary_pending', epoch, canonical(route['plan']),
                                 canonical(plan), policy, self.clock(), None,))
             self.store.execute('UPDATE routes SET epoch=?,plan=? WHERE alias=?', (epoch, canonical(plan), alias))
+            self.progression.begin(release_id,epoch,self.config['policy'],candidate_bps)
             self.outbox.enqueue(operation_id, alias, epoch, plan, release_id, 'canary')
             result = {'release_id': release_id, 'epoch': epoch, 'phase': 'canary_pending'}
             self.store.remember(operation_id, 'release.begin', fingerprint, result)
@@ -73,17 +81,31 @@ class Releases:
                 raise FleetError('stale_assessment', 'deployment or accepted evidence changed', 409)
             decision = assessment['decision']
             epoch = route['epoch']
+            staged = release['policy'].get('rollout') is not None
+            reason = None
+            if staged:
+                decision,target_bps,reason = self.progression.observe(release,json.loads(assessment['payload']),self.assessor.preview)
             if decision != 'HOLD':
-                plan = self.planner.settle(route['plan'], decision)
+                if decision == 'ADVANCE':
+                    plan = deepcopy(route['plan'])
+                    plan['candidate_bps'] = target_bps
+                else:
+                    plan = self.planner.settle(route['plan'], decision)
                 self.planner.validate_capacity(plan)
                 epoch += 1
                 self.store.execute('UPDATE routes SET epoch=?,plan=? WHERE alias=?', (epoch, canonical(plan), release['alias']))
-                phase = 'promoted' if decision == 'PROMOTE' else 'rolled_back'
+                phase = 'canary' if decision == 'ADVANCE' else ('promoted' if decision == 'PROMOTE' else 'rolled_back')
                 self.store.execute("UPDATE releases SET phase='terminal_pending',route_epoch=?,decision=? WHERE id=?",
                                    (epoch, decision, release['id']))
+                if staged:
+                    self.progression.committed(release['id'],epoch,decision)
+                    self.store.execute('UPDATE releases SET candidate_plan=? WHERE id=?',(canonical(plan),release['id']))
                 self.outbox.enqueue(operation_id, release['alias'], epoch, plan, release['id'], phase)
             result = {'release_id': release['id'], 'decision': decision, 'epoch': epoch,
                       'phase': 'canary' if decision == 'HOLD' else 'terminal_pending'}
+            if staged:
+                result['progress_reason'] = reason
+                result['progress'] = self.progress(release['id'])
             self.store.remember(operation_id, 'release.apply', fingerprint, result)
             self.store.audit('release.apply', release['id'], result, self.clock())
         return result
@@ -105,6 +127,7 @@ class Releases:
             epoch = expected_epoch + 1
             self.store.execute('UPDATE routes SET epoch=?,plan=? WHERE alias=?', (epoch, canonical(plan), release['alias']))
             self.store.execute("UPDATE releases SET phase='terminal_pending',route_epoch=?,decision='ROLLBACK' WHERE id=?", (epoch, release_id))
+            self.progression.committed(release_id,epoch,'ROLLBACK')
             self.outbox.enqueue(operation_id, release['alias'], epoch, plan, release_id, 'rolled_back')
             result = {'release_id': release_id, 'epoch': epoch, 'phase': 'terminal_pending'}
             self.store.remember(operation_id, 'release.rollback', fingerprint, result)

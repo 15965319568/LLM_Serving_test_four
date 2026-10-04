@@ -1,4 +1,4 @@
-# FleetServe 业务与持久化契约（v5）
+# FleetServe 业务与持久化契约（v5.1）
 
 本文规定外部可观察的验收行为。内部模块组织、同步方式和实现算法由维护者决定。
 没有要求按文档章节顺序解题。所有时间戳为非负 Unix 秒，可使用注入的时钟。
@@ -74,6 +74,7 @@ after_apply 是模拟 ACK 丢失的边界，可抛错或退出进程；启动应
 reasons、metrics、mix_distance、evidence_digest、sample_ids、ignored。
 同 assessment_id 同窗口同证据同epoch可重读；更换快照报 `assessment_conflict`。
 
+以下为未配置policy.rollout的原有语义；启用后补充遵守progressive-rollout-contract。
 `releases.apply(assessment_id,operation_id)` 必须同时验证 canary、route_epoch 及
 evidence_version；任一变化报 `stale_assessment`。HOLD 不改路由和epoch；
 PROMOTE/ROLLBACK 重新核验目标容量，成功提交 epoch+1、terminal_pending，
@@ -84,9 +85,9 @@ ACK 后分别 promoted/rolled_back；失败不留下部分状态。
 
 ## 管理与兼容
 
-control.sqlite3 的 user_version=1 已存在；升级到2只能加法迁移，保留租约、路由、操作、
+control.sqlite3 的 user_version=1和2均已存在；升级到3只能加法迁移，保留租约、路由、操作、
 接纳、证据和审计。未知更高版本报 `unsupported_schema`。V1 表定义见 migrations.V1，
-V2 为 receipts 增加 source='gateway' 及查询索引。edge.sqlite3 与 worker journals 独立。
+V2 为 receipts 增加 source='gateway' 及查询索引；V3增加逐阶段发布状态与窗口历史，见progressive-rollout-contract。edge.sqlite3 与 worker journals 独立。
 底层 StreamServe 公开契约与19项原有兼容测试继续有效。
 
 `operations.reconciliation.accounting(store)` 按 tenant/alias/revision 汇总 admitted、

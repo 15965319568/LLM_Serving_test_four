@@ -136,6 +136,9 @@ class Application:
         fleet = self.fleet
         if method=='GET':
             if path=='/admin/state': return fleet.snapshot()
+            if path=='/admin/progress':
+                query = parse_qs(scope.get('query_string',b'').decode())
+                return fleet.releases.progress(query['release_id'][0])
             if path=='/admin/accounting': return accounting(fleet.store)
             if path=='/admin/consistency': return route_consistency(fleet)
             if path=='/admin/audit':

@@ -1,0 +1,39 @@
+{
+  "receipts": "admissions.csv",
+  "sources": [
+    {
+      "producer": "edge",
+      "file": "edge.jsonl"
+    },
+    {
+      "producer": "quality",
+      "file": "quality.jsonl"
+    },
+    {
+      "producer": "worker",
+      "file": "worker.jsonl"
+    }
+  ],
+  "watermarks": [
+    {
+      "producer": "edge",
+      "cohort": "interactive",
+      "through": 400
+    },
+    {
+      "producer": "edge",
+      "cohort": "batch",
+      "through": 400
+    },
+    {
+      "producer": "quality",
+      "cohort": "interactive",
+      "through": 400
+    },
+    {
+      "producer": "quality",
+      "cohort": "batch",
+      "through": 400
+    }
+  ]
+}

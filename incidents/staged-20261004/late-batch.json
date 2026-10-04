@@ -1,0 +1,9 @@
+{
+  "receipts": "empty-admissions.csv",
+  "sources": [
+    {
+      "producer": "quality",
+      "file": "quality-revisions.jsonl"
+    }
+  ]
+}

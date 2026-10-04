@@ -58,6 +58,8 @@ def validate(config):
         raise FleetError('invalid_config', 'rate thresholds must not exceed one')
     if not policy.get('required_cohorts'):
         raise FleetError('invalid_config', 'required_cohorts is empty')
+    from .control.progression import validate_rollout
+    validate_rollout(policy)
     return config
 
 

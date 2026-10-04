@@ -1,0 +1,6 @@
+{"schema":2,"event_id":"q.stage.0.south.r20261004.1","update_seq":3,"request_id":"stage.0.south.r20261004.1","finished_at":511,"score":0.6,"revision":"r20261004"}
+{"schema":2,"event_id":"q.stage.0.south.r20261004.3","update_seq":3,"request_id":"stage.0.south.r20261004.3","finished_at":513,"score":0.6,"revision":"r20261004"}
+{"schema":2,"event_id":"q.stage.0.south.r20261004.0","update_seq":3,"request_id":"stage.0.south.r20261004.0","finished_at":510,"score":0.6,"revision":"r20261004"}
+{"schema":2,"event_id":"q.stage.0.south.r20261004.4","update_seq":3,"request_id":"stage.0.south.r20261004.4","finished_at":514,"score":0.6,"revision":"r20261004"}
+{"schema":2,"event_id":"q.stage.0.south.r20261004.2","update_seq":3,"request_id":"stage.0.south.r20261004.2","finished_at":512,"score":0.6,"revision":"r20261004"}
+{"schema":2,"event_id":"q.stage.0.south.r20261004.5","update_seq":3,"request_id":"stage.0.south.r20261004.5","finished_at":515,"score":0.6,"revision":"r20261004"}

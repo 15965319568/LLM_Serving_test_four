@@ -41,7 +41,7 @@ INSERT INTO meta VALUES ('evidence_version','0');
 
 def migrate(db):
     version = db.execute('PRAGMA user_version').fetchone()[0]
-    if version > 2:
+    if version > 3:
         raise FleetError('unsupported_schema', 'control database is newer than this binary', 409)
     if version == 0:
         db.executescript('BEGIN IMMEDIATE;\n'+V1+'\nPRAGMA user_version=1;\nCOMMIT;')
@@ -54,4 +54,16 @@ def migrate(db):
         CREATE INDEX receipts_window ON receipts(alias,revision,admitted);
         CREATE INDEX pending_effects ON effects(status,alias,epoch);
         PRAGMA user_version=2;
+        COMMIT;''')
+
+        version = 2
+    if version == 2:
+        db.executescript('''BEGIN IMMEDIATE;
+        CREATE TABLE rollout_progress(release_id TEXT PRIMARY KEY,route_epoch INTEGER NOT NULL,
+            stage_index INTEGER NOT NULL,healthy_windows INTEGER NOT NULL,last_end REAL,effective_at REAL);
+        CREATE TABLE rollout_windows(id INTEGER PRIMARY KEY AUTOINCREMENT,release_id TEXT NOT NULL,
+            route_epoch INTEGER NOT NULL,start REAL NOT NULL,end REAL NOT NULL,assessment_id TEXT NOT NULL,
+            decision TEXT NOT NULL,counted INTEGER NOT NULL,
+            UNIQUE(release_id,route_epoch,start,end));
+        PRAGMA user_version=3;
         COMMIT;''')
