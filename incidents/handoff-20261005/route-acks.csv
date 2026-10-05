@@ -1,0 +1,14 @@
+﻿receipt,sequence,recorded_at,state,tenant,alias,revision,cohort
+route.eadeff5998de8be528,100,201,published,north,chat,future-revision,future
+route.7fc73391fe0005acba,99,160,prepared,south,chat,retired-draft,archive
+route.8a473f18f758a9a799,2,150,published,north,chat,r20261004,interactive
+route.7fc73391fe0005acba,2,150,published,south,chat,r20261003,batch
+route.8a473f18f758a9a799,99,160,prepared,north,chat,retired-draft,archive
+route.8a473f18f758a9a799,100,201,published,north,chat,future-revision,future
+route.7fc73391fe0005acba,100,201,published,south,chat,future-revision,future
+route.eadeff5998de8be528,2,150,published,north,chat,r20261003,interactive
+route.79fb533701d5786191,100,201,published,south,chat,future-revision,future
+route.79fb533701d5786191,2,150,published,south,chat,r20261004,batch
+route.79fb533701d5786191,99,160,prepared,south,chat,retired-draft,archive
+route.e58786b82ac1c4214d,2,150,prepared,north,chat,r20261003,interactive
+route.eadeff5998de8be528,99,160,prepared,north,chat,retired-draft,archive

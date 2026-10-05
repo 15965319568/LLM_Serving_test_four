@@ -1,0 +1,19 @@
+{
+  "cutoff": 200,
+  "window": [
+    100,
+    110
+  ],
+  "alias": "chat",
+  "stable": "r20261003",
+  "candidate": "r20261004",
+  "fleet_manifest": "fleet.json",
+  "gateway": "gateway.csv",
+  "routes": "route-acks.csv",
+  "bindings": "trace-bindings.csv",
+  "observations": [
+    "edge.jsonl.gz",
+    "quality.csv",
+    "archive.jsonl.gz"
+  ]
+}

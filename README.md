@@ -1,4 +1,4 @@
-> 本轮工作见TASK.md，评分边界见docs/acceptance-v7.4.md；本文的完整产品背景不自动增加本轮考点。
+> 本轮工作见TASK.md，评分边界见docs/acceptance-v7.5.md；本文的完整产品背景不自动增加本轮考点。
 
 # FleetServe / MLServer inference operations workbench — v7
 
